@@ -94,4 +94,32 @@ class FailureTest extends \PHPUnit_Framework_TestCase
     {
         $this->provider->cloneFrom("ftp://localhost/test.git");
     }
+
+    /**
+     * @expectedException Nkey\GitProvider\GitProviderException
+     * @expectedExceptionMessage Invalid pattern
+     */
+    public function testAddEmpty()
+    {
+        $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
+        $file = new FileOutputStream($this->provider->getPath() . "/stub");
+        $file->write("Stub data\n");
+        $file->close();
+
+        $this->provider->addToIndex("");
+
+        $this->provider->push();
+    }
+
+    /**
+     * @expectedException Nkey\GitProvider\GitProviderException
+     * @expectedExceptionMessage Could not write description file on non-bare repository!
+     */
+    public function testSetDescriptionOnWorkspace()
+    {
+        $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
+        $this->provider->setProjectName("This will went wrong!");
+    }
 }

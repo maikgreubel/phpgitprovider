@@ -246,21 +246,19 @@ class GitProvider
             return;
         }
 
+        if (! $this->bare) {
+            throw new GitProviderException("Could not write description file on non-bare repository!");
+        }
+
         $fd = null;
 
-        if ($this->bare) {
-            $fd = fopen("$this->path/description", "w");
-            if (! $fd) {
-                throw new GitProviderException("Setting the name not possible, could not open description file!");
-            }
+        $fd = fopen("$this->path/description", "w");
+        if (! $fd) {
+            throw new GitProviderException("Setting the name not possible, could not open description file!");
         }
-        if ($fd) {
-            if (($len = fputs($fd, $projectName, strlen($projectName))) === false || $len != strlen($projectName)) {
-                throw new GitProviderException("Could not write description file!");
-            }
-            fflush($fd);
-            fclose($fd);
-        }
+        fputs($fd, $projectName, strlen($projectName));
+        fflush($fd);
+        fclose($fd);
     }
 
     /**
@@ -411,12 +409,6 @@ class GitProvider
             }
             $uri = sprintf("file://%s%s", (substr($uri, 0, 1) == '/' ? '' : '/'), $uri);
             $parameters[] = sprintf("'%s'", $uri);
-        }
-
-        if (count($parameters) === 0) {
-            throw new GitProviderException("Invalid uri {uri} given", array(
-                'uri' => $uri
-            ));
         }
 
         $parameters[] = ".";
