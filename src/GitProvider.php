@@ -399,12 +399,18 @@ class GitProvider
 
         if (substr($uri, 0, 4) == 'http' || substr($uri, 0, 3) == 'git' || substr($uri, 0, 3) == 'ssh') {
             $parameters[] = $uri;
+        } elseif (strstr($uri, "://")) {
+            throw new GitProviderException("Invalid uri {uri} given", array(
+                'uri' => $uri
+            ));
         } else {
             $dir = new Directory($uri);
-            if ($dir->exists()) {
-                $uri = sprintf("file://%s%s", (substr($uri, 0, 1) == '/' ? '' : '/'), $uri);
-                $parameters[] = sprintf("'%s'", $uri);
+            if (! $dir->exists()) {
+                $dir->create(true);
+                $this->path = $dir->getPath();
             }
+            $uri = sprintf("file://%s%s", (substr($uri, 0, 1) == '/' ? '' : '/'), $uri);
+            $parameters[] = sprintf("'%s'", $uri);
         }
 
         if (count($parameters) === 0) {
@@ -413,11 +419,6 @@ class GitProvider
             ));
         }
 
-        $dir = new Directory($this->path);
-        if (! $dir->exists()) {
-            $dir->create(true);
-        }
-        $this->path = $dir->getPath();
         $parameters[] = ".";
 
         $this->execute("clone", $parameters);
