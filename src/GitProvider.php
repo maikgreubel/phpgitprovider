@@ -1,21 +1,17 @@
 <?php
 namespace Nkey\GitProvider;
 
-use Generics\Logger\SimpleLogger;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\AbstractLogger;
-use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 use Generics\Util\Directory;
+use Generics\Logger\LoggerTrait;
 
 /**
  * Git provider
  *
  * @author Maik Greubel <greubel@nkey.de>
  */
-class GitProvider implements LoggerAwareInterface
+class GitProvider
 {
-    use Interpolator;
+    use LoggerTrait;
 
     /**
      * The path to repository
@@ -39,13 +35,6 @@ class GitProvider implements LoggerAwareInterface
     private $bare;
 
     /**
-     * Logger instance
-     *
-     * @var AbstractLogger
-     */
-    private $logger;
-
-    /**
      * Create a new GitProvider object
      *
      * @param string $path
@@ -55,7 +44,6 @@ class GitProvider implements LoggerAwareInterface
      */
     public function __construct($path)
     {
-        $this->logger = new NullLogger();
         $this->path = $path;
     }
 
@@ -82,15 +70,6 @@ class GitProvider implements LoggerAwareInterface
         } else {
             $this->bare = false;
         }
-    }
-
-    /*
-     * (non-PHPdoc)
-     * @see \Psr\Log\LoggerAwareInterface::setLogger()
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
     }
 
     /**
@@ -165,8 +144,7 @@ class GitProvider implements LoggerAwareInterface
      */
     private function evaluateOutput($command, $toExecute, $output, $returnvalue, $outputAsString)
     {
-        $logger = new SimpleLogger();
-        $logger->debug("{executed}\ncode: {result}\noutput:{output}", array(
+        $this->getLog()->debug("{executed}\ncode: {result}\noutput:{output}", array(
             'excuted' => $toExecute,
             'result' => $returnvalue,
             'output' => implode("\n", $output)
