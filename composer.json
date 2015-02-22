@@ -1,7 +1,6 @@
 {
-	"require": {
-	    "nkey/phpGenerics": "dev-master",
-	    "psr/log": "1.0"
+	"require" : {
+		"php" : ">=5.5"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "4.5.0",
@@ -11,8 +10,8 @@
 		"phpmd/phpmd" : "2.2.0",
 		"sebastian/phpcpd" : "2.0.1",
 		"theseer/phpdox" : "0.7.0",
-		"nkey/phpGenerics": "dev-master",
-		"psr/log": "1.0"
+		"nkey/phpGenerics" : "dev-master",
+		"psr/log" : "1.0"
 	},
 	"keywords" : [
 		"Git SCM Provider"
@@ -35,11 +34,8 @@
 			"src/"
 		]
 	},
-	"name" : "Nkey/GitProvider",
+	"name" : "nkey/gitprovider",
 	"type" : "library",
 	"description" : "Provider for Git SCM",
-	"license" : "BSD-2-Clause",
-	"require" : {
-		"php" : ">=5.5"
-	}
+	"license" : "BSD-2-Clause"
 }
