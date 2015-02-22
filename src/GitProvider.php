@@ -295,6 +295,16 @@ class GitProvider
     }
 
     /**
+     * Retrieve the directory of repository
+     *
+     * @return \Generics\Util\Directory
+     */
+    public function getDirectory()
+    {
+        return new Directory($this->path);
+    }
+
+    /**
      * Add a subset of entries to index
      *
      * @param string $pattern
@@ -448,7 +458,7 @@ class GitProvider
      * @param string $branchName
      * @return boolean
      */
-    private function hasBranch($branchName)
+    public function hasBranch($branchName)
     {
         $branches = $this->execute("branch", array(), false);
         if (count($branches) == 0) {

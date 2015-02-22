@@ -124,6 +124,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
         $clone->setAuthor("John Doe", "john@doe.tld");
 
         $this->assertTrue($clone->isEmpty(".git"));
+        $this->assertFalse($clone->hasBranch("master"));
 
         $clone->destroy();
     }
@@ -248,5 +249,40 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
 
         $clone1->destroy();
         $clone2->destroy();
+    }
+
+    public function testRemoveStaged()
+    {
+        $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
+        $file = new FileOutputStream($this->provider->getPath() . "/README.md");
+        $file->write("Some test readme\n");
+        $file->write("==\n");
+        $file->close();
+
+        $this->provider->addToIndex("README.md");
+        $this->assertTrue($this->provider->isStaged("README.md"));
+
+        $this->provider->remove("README.md");
+
+        $this->assertFalse($this->provider->isStaged("README.md"));
+        $this->assertTrue($this->provider->getDirectory()->fileExists("README.md"));
+    }
+
+    public function testRemoveForced()
+    {
+        $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
+        $file = new FileOutputStream($this->provider->getPath() . "/README.md");
+        $file->write("Some test readme\n");
+        $file->write("==\n");
+        $file->close();
+
+        $this->provider->addToIndex("README.md");
+        $this->assertTrue($this->provider->isStaged("README.md"));
+
+        $this->provider->remove("README.md", true);
+
+        $this->assertFalse($this->provider->isStaged("README.md"));
     }
 }
