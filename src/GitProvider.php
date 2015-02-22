@@ -98,7 +98,7 @@ class GitProvider
             $parameters[] = '--shared=0700';
         }
 
-        $parameters[] = $path;
+        $parameters[] = sprintf("'%s'", $path);
 
         $this->execute("init", $parameters);
     }
@@ -261,6 +261,25 @@ class GitProvider
     }
 
     /**
+     * Set the user and email address for the repository
+     *
+     * @param string $authorName The name of author (you)
+     * @param string $authorEmail The email address of author (your email)
+     */
+    public function setAuthor($authorName, $authorEmail)
+    {
+        $parameters = array();
+        $parameters[] = '--local';
+        $parameters["user.name"] = sprintf("'%s'", $authorName);
+        $this->execute("config", $parameters);
+
+        $parameters = array();
+        $parameters[] = '--local';
+        $parameters["user.email"] = sprintf("'%s'", $authorEmail);
+        $this->execute("config", $parameters);
+    }
+
+    /**
      * Retrieve the absolute path to repository
      *
      * @return string
@@ -369,7 +388,7 @@ class GitProvider
             $dir = new Directory($uri);
             if ($dir->exists()) {
                 $uri = sprintf("file://%s%s", (substr($uri, 0, 1) == '/' ? '' : '/'), $uri);
-                $parameters[] = $uri;
+                $parameters[] = sprintf("'%s'", $uri);
             }
         }
 

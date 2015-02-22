@@ -18,7 +18,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $path = __DIR__ . "/test.git";
+        $path = getcwd() . "/test.git";
         if (file_exists($path)) {
             echo "Removing $path first\n";
             $d = new Directory($path);
@@ -29,7 +29,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        $path = __DIR__ . "/test.git";
+        $path = getcwd() . "/test.git";
         if (file_exists($path)) {
             $d = new Directory($path);
             $d->remove(true);
@@ -39,12 +39,14 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
     public function testSimple()
     {
         $this->provider->create(true, true);
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
         $this->provider->setProjectName('A test repository');
     }
 
     public function testAddFile()
     {
         $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
         $file = new FileOutputStream($this->provider->getPath() . "/README.md");
         $file->write("Some test readme\n");
         $file->write("==\n");
@@ -57,6 +59,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
     public function testStaged()
     {
         $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
         $file = new FileOutputStream($this->provider->getPath() . "/stub");
         $file->write("Stub data\n");
         $file->close();
@@ -70,6 +73,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
     public function testCommit()
     {
         $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
         $file = new FileOutputStream($this->provider->getPath() . "/stub");
         $file->write("Stub data\n");
         $file->close();
@@ -86,6 +90,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
     public function testRemove()
     {
         $this->provider->create();
+        $this->provider->setAuthor("John Doe", "john@doe.tld");
         $file = new FileOutputStream($this->provider->getPath() . "/stub");
         $file->write("Stub data\n");
         $file->close();
@@ -116,6 +121,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
 
         $clone = new GitProvider($dir->getPath());
         $clone->cloneFrom($this->provider->getPath());
+        $clone->setAuthor("John Doe", "john@doe.tld");
 
         $this->assertTrue($clone->isEmpty(".git"));
 
@@ -133,6 +139,7 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
 
         $clone = new GitProvider($dir->getPath());
         $clone->cloneFrom($this->provider->getPath());
+        $clone->setAuthor("John Doe", "john@doe.tld");
 
         $file = new FileOutputStream($clone->getPath() . "/stub");
         $file->write("Stub data\n");
@@ -162,9 +169,11 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
 
         $clone1 = new GitProvider($clone1dir->getPath());
         $clone1->cloneFrom($this->provider->getPath());
+        $clone1->setAuthor("John Doe", "john@doe.tld");
 
         $clone2 = new GitProvider($clone2dir->getPath());
         $clone2->cloneFrom($this->provider->getPath());
+        $clone2->setAuthor("Jane Doe", "jane@doe.tld");
 
         $file = new FileOutputStream($clone1->getPath() . "/stub");
         $file->write("Stub data\n");
@@ -200,9 +209,11 @@ class GitProviderTest extends \PHPUnit_Framework_TestCase
 
         $clone1 = new GitProvider($clone1dir->getPath());
         $clone1->cloneFrom($this->provider->getPath());
+        $clone1->setAuthor("John Doe", "john@doe.tld");
 
         $clone2 = new GitProvider($clone2dir->getPath());
         $clone2->cloneFrom($this->provider->getPath());
+        $clone1->setAuthor("Jane Doe", "jane@doe.tld");
 
         $file = new FileOutputStream($clone1->getPath() . "/stub");
         $file->write("Stub data\n");
