@@ -101,6 +101,9 @@ class GitProvider
         $parameters[] = sprintf("'%s'", $path);
 
         $this->execute("init", $parameters);
+
+        $dir = new Directory($this->path);
+        $this->path = $dir->getPath();
     }
 
     /**
@@ -263,8 +266,10 @@ class GitProvider
     /**
      * Set the user and email address for the repository
      *
-     * @param string $authorName The name of author (you)
-     * @param string $authorEmail The email address of author (your email)
+     * @param string $authorName
+     *            The name of author (you)
+     * @param string $authorEmail
+     *            The email address of author (your email)
      */
     public function setAuthor($authorName, $authorEmail)
     {
@@ -398,6 +403,11 @@ class GitProvider
             ));
         }
 
+        $dir = new Directory($this->path);
+        if (! $dir->exists()) {
+            $dir->create(true);
+        }
+        $this->path = $dir->getPath();
         $parameters[] = ".";
 
         $this->execute("clone", $parameters);
