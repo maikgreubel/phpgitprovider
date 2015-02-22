@@ -12,9 +12,8 @@ try {
     // Create a bare repository
     $bare->create(true, true);
 
-    // Set the project name and author
+    // Set the project name
     $bare->setProjectName("This is only a test repository");
-    $bare->setAuthor("John Doe", "john@doe.tld");
 
     // Now we can clone it...
 
@@ -22,6 +21,8 @@ try {
     $workspace = new GitProvider("./test-workspace");
     // Clone the bare repository
     $workspace->cloneFrom($bare->getPath());
+    // First set author to be able to commit
+    $workspace->setAuthor("John Doe", "john@doe.tld");
 
     // Add some crucial data to workspace
     $fd = fopen($workspace->getPath() . "/I-am-some-stupid-file.txt", "w");
