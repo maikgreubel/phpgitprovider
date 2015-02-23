@@ -122,4 +122,33 @@ class FailureTest extends \PHPUnit_Framework_TestCase
         $this->provider->setAuthor("John Doe", "john@doe.tld");
         $this->provider->setProjectName("This will went wrong!");
     }
+
+    /**
+     * @expectedException Nkey\GitProvider\GitProviderException
+     * @expectedExceptionMessage Could not check emptyness of bare repository
+     */
+    public function testNonEmptyBare()
+    {
+        $this->provider->create(true, true);
+        $this->assertFalse($this->provider->isEmpty());
+    }
+
+    /**
+     * @expectedException Nkey\GitProvider\GitProviderException
+     * @expectedExceptionRegExp Invalid repository path, \w+ does not exist
+     */
+    public function testNonExistingRepositoryAction()
+    {
+        $this->provider->setProjectName("This will fail");
+    }
+
+    /**
+     * @expectedException Nkey\GitProvider\GitProviderException
+     * @expectedExceptionRegExp Invalid repository path, \w+ does not seems to be a git repo
+     */
+    public function testInvalidRepositoryAction()
+    {
+        $this->provider->getDirectory()->create(true);
+        $this->provider->setProjectName("This will fail");
+    }
 }
