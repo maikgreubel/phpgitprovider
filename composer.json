@@ -1,18 +1,19 @@
 {
 	"require" : {
 		"php" : ">=5.4",
-		"nkey/phpGenerics" : "dev-master"
+		"nkey/phpGenerics" : "dev-master",
+        "psr/log" : "1.0"
 	},
 	"require-dev" : {
-		"phpunit/phpunit" : "4.5.0",
-		"squizlabs/php_codesniffer" : "2.2.0",
-		"phploc/phploc" : "2.0.6",
-		"pdepend/pdepend" : "2.0.4",
-		"phpmd/phpmd" : "2.2.0",
-		"sebastian/phpcpd" : "2.0.1",
-		"theseer/phpdox" : "0.7.0",
-		"nkey/phpGenerics" : "dev-master",
-		"psr/log" : "1.0"
+        "phpunit/phpunit" : "4.6.6",
+        "phpunit/dbunit" : "1.3.2",
+        "squizlabs/php_codesniffer" : "2.3.2",
+        "phploc/phploc" : "2.1.1",
+        "pdepend/pdepend" : "2.0.6",
+        "phpmd/phpmd" : "2.2.2",
+        "sebastian/phpcpd" : "2.0.2",
+        "theseer/phpdox" : "0.8.0",
+        "satooshi/php-coveralls": "dev-master"
 	},
 	"keywords" : [
 		"Git SCM Provider"
@@ -26,14 +27,15 @@
 	],
 	"support" : {
 		"email" : "greubel@nkey.de",
-		"source" : "https://nkey.de:82/GitProvider",
-		"issues" : "https://nkey.de:82/GitProvider",
-		"wiki" : "https://nkey.de:82/GitProvider"
+		"source" : "https://github.com/maikgreubel/phpgitprovider",
+		"issues" : "https://github.com/maikgreubel/phpgitprovider/issues",
+		"wiki" : "https://github.com/maikgreubel/phpgitprovider/wiki"
 	},
 	"autoload" : {
-		"classmap" : [
-			"src/"
-		]
+		"psr-4" : {
+		    "Nkey\\GitProvider\\" : "src",
+		    "Nkey\\GitProvider\\Tests\\" : "tests"
+		}
 	},
 	"name" : "nkey/gitprovider",
 	"type" : "library",
